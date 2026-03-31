@@ -13,19 +13,17 @@
 import allure
 
 from utils.config import AppConfig, TimeoutConfig
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class BasePage:
 
 
-    LOCATOR_MODAL_OVERLAY = (By.CSS_SELECTOR, ".Modal_modal_overlay__x2ZCr")
     BASE_URL = AppConfig.BASE_URL
-
 
     def __init__(self, driver):
         self.driver = driver
@@ -173,7 +171,6 @@ class BasePage:
     
     @allure.step("Создаёт и возвращает ActionChains")
     def _create_action_chains(self):
-        from selenium.webdriver.common.action_chains import ActionChains
         return ActionChains(self.driver)
     
     @allure.step("Очищает все cookies")

@@ -10,7 +10,6 @@
 """
 
 from pages.base_page import BasePage
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
     StaleElementReferenceException,
     NoSuchElementException,
@@ -19,82 +18,37 @@ from selenium.common.exceptions import (
 
 import allure
 
+from locators.base_locators import (
+    LOCATOR_MODAL_CLOSE_BUTTON,
+    LOCATOR_ORDER_NUMBER
+)
+
+from locators.main_locators import (
+    LOCATOR_BUNS_TAB,
+    LOCATOR_SAUCE_TAB,
+    LOCATOR_FILLING_TAB,
+    LOCATOR_INGREDIENT_CARD,
+    LOCATOR_BUTTON_PLACE_ORDER,
+    LOCATOR_CONSTRUCTOR_DROP_ZONE,
+)
+
+from locators.constructor_locators import (
+    LOCATOR_INGREDIENT_CARD,
+    LOCATOR_INGREDIENT_COUNTER,
+    LOCATOR_KRATOR_BUN,
+    LOCATOR_KRATOR_BUN_COUNTER,
+    LOCATOR_SPICY_SAUCE,
+    LOCATOR_SPICY_SAUCE_COUNTER,
+    LOCATOR_BEEF_METEORITE,
+    LOCATOR_BEEF_METEORITE_COUNTER,
+    LOCATOR_CRISPY_RINGS_COUNTER,
+    LOCATOR_FALLENIAN_FRUITS_COUNTER,
+)
+
+
 
 class ConstructorPage(BasePage):
     
-
-    # --- Табы ингредиентов ---
-    
-    # Таб «Булки» (переключение на булки)
-    LOCATOR_BUNS_TAB = (By.XPATH, "//span[text()='Булки']")
-    
-    # Таб «Соусы» (переключение на соусы)
-    LOCATOR_SAUCE_TAB = (By.XPATH, "//span[text()='Соусы']")
-    
-    # Таб «Начинки» (переключение на начинки)
-    LOCATOR_FILLING_TAB = (By.XPATH, "//span[text()='Начинки']")
-    
-
-    # --- Ингредиенты (карточки) ---
-    
-    # Карточка ингредиента (общий селектор для всех ингредиентов)
-    LOCATOR_INGREDIENT_CARD = (By.CSS_SELECTOR, ".BurgerIngredient_ingredient__1TVf6")
-    
-    # Счётчик ингредиента (число внутри карточки: 0, 1, 2...)
-    LOCATOR_INGREDIENT_COUNTER = (By.CSS_SELECTOR, ".counter_counter__num__3nue1")
-    
-    
-    # --- Конструктор (корзина) ---
-    
-    # Зона конструктора (куда перетаскивать ингредиенты)
-    LOCATOR_CONSTRUCTOR_BASKET = (By.CSS_SELECTOR, ".BurgerConstructor_basket__29Cd7")
-    
-    # Кнопка «Оформить заказ» (когда авторизован)
-    LOCATOR_ORDER_BUTTON = (By.CSS_SELECTOR, ".BurgerConstructor_basket__container__2fUl3 .button_button_type_primary__1O7Bx")
-    
-    # Кнопка «Войти в аккаунт» (когда не авторизован)
-    LOCATOR_LOGIN_BUTTON = (By.XPATH, "//button[text()='Войти в аккаунт']")
-    
-
-    # --- Модальное окно ингредиента ---
-    
-    # Кнопка закрытия модального окна (крестик)
-    LOCATOR_MODAL_CLOSE_BTN = (By.CSS_SELECTOR, ".Modal_modal__close__TnseK")
-
-
-    # ЛОКАТОРЫ ДЛЯ СОЗДАНИЯ ЗАКАЗА (тестовые ингредиенты)
-
-    # Зона конструктора (куда перетаскиваем)
-    LOCATOR_CONSTRUCTOR_DROP_ZONE = (By.CSS_SELECTOR, 'section.BurgerConstructor_basket__29Cd7')
-    
-    # === Краторная булка ===
-    LOCATOR_KRATOR_BUN = (By.XPATH, "//p[text()='Краторная булка N-200i']")
-    LOCATOR_KRATOR_BUN_COUNTER = (By.XPATH, "//p[text()='Краторная булка N-200i']/ancestor::a//div[contains(@class, 'counter_counter')]/p")
-    
-    # === Соус Spicy-X ===
-    LOCATOR_SPICY_SAUCE = (By.XPATH, "//p[text()='Соус Spicy-X']")
-    LOCATOR_SPICY_SAUCE_COUNTER = (By.XPATH, "//p[text()='Соус Spicy-X']/ancestor::a//div[contains(@class, 'counter_counter')]/p")
-    
-    # === Таб "Начинки" ===
-    LOCATOR_FILLINGS_TAB = (By.XPATH, "//span[text()='Начинки']")
-    
-    # === Говяжий метеорит ===
-    LOCATOR_BEEF_METEORITE = (By.XPATH, "//p[text()='Говяжий метеорит (отбивная)']")
-    LOCATOR_BEEF_METEORITE_COUNTER = (By.XPATH, "//p[text()='Говяжий метеорит (отбивная)']/ancestor::a//div[contains(@class, 'counter_counter')]/p")
-    
-    # === Хрустящие кольца ===
-    LOCATOR_CRISPY_RINGS = (By.XPATH, "//p[text()='Хрустящие минеральные кольца']")
-    LOCATOR_CRISPY_RINGS_COUNTER = (By.XPATH, "//p[text()='Хрустящие минеральные кольца']/ancestor::a//div[contains(@class, 'counter_counter')]/p")
-    
-    # === Плоды Фалленианского дерева ===
-    LOCATOR_FALLENIAN_FRUITS = (By.XPATH, "//p[text()='Плоды Фалленианского дерева']")
-    LOCATOR_FALLENIAN_FRUITS_COUNTER = (By.XPATH, "//p[text()='Плоды Фалленианского дерева']/ancestor::a//div[contains(@class, 'counter_counter')]/p")
-    
-    # === Кнопки и модальные окна ===
-    LOCATOR_BUTTON_PLACE_ORDER = (By.XPATH, "//button[text()='Оформить заказ']")
-    LOCATOR_ORDER_NUMBER = (By.XPATH, "//h2[contains(@class, 'text_type_digits-large')]")
-    LOCATOR_MODAL_CLOSE_BUTTON = (By.CSS_SELECTOR, 'button.Modal_modal__close__TnseK')
-
 
     # МЕТОДЫ НАВИГАЦИИ
 
@@ -107,24 +61,24 @@ class ConstructorPage(BasePage):
 
     @allure.step("Переключение на таб «Булки»")
     def switch_to_buns_tab(self):
-        self.click(self.LOCATOR_BUNS_TAB)
+        self.click(LOCATOR_BUNS_TAB)
     
 
     @allure.step("Переключение на таб «Соусы»")
     def switch_to_sauce_tab(self):
-        self.click(self.LOCATOR_SAUCE_TAB) 
+        self.click(LOCATOR_SAUCE_TAB) 
 
     
     @allure.step("Переключение на таб «Начинки»")
     def switch_to_filling_tab(self):
-        self.click(self.LOCATOR_FILLING_TAB) 
+        self.click(LOCATOR_FILLING_TAB) 
     
 
     # МЕТОДЫ РАБОТЫ С ИНГРЕДИЕНТАМИ
     
     @allure.step("Получение списка всех ингредиентов")
     def get_all_ingredients(self):
-        return self.find_elements(self.LOCATOR_INGREDIENT_CARD)
+        return self.find_elements(LOCATOR_INGREDIENT_CARD)
     
     
     @allure.step("Получение ингредиента по индексу: {index}")
@@ -136,7 +90,7 @@ class ConstructorPage(BasePage):
     @allure.step("Получение счётчика ингредиента по индексу: {index}")
     def get_ingredient_counter(self, index=0):
         ingredient = self.get_ingredient_by_index(index)
-        counter = ingredient.find_element(*self.LOCATOR_INGREDIENT_COUNTER)
+        counter = ingredient.find_element(*LOCATOR_INGREDIENT_COUNTER)
         return counter.text 
     
     
@@ -147,7 +101,7 @@ class ConstructorPage(BasePage):
         # Находим ингредиент
         ingredient = self.get_ingredient_by_index(index)
         # Находим зону конструктора
-        constructor_zone = self.wait_for_element_visible(self.LOCATOR_CONSTRUCTOR_BASKET)
+        constructor_zone = self.wait_for_element_visible(LOCATOR_CONSTRUCTOR_DROP_ZONE)
         # Создаём ActionChains
         actions = self._create_action_chains()
         # Выполняем перетаскивание
@@ -161,7 +115,7 @@ class ConstructorPage(BasePage):
     def drag_ingredient_to_constructor_js(self, index=0):
         # Находим ингредиент и зону конструктора
         ingredient = self.get_ingredient_by_index(index)
-        constructor_zone = self.wait_for_element_visible(self.LOCATOR_CONSTRUCTOR_BASKET)
+        constructor_zone = self.wait_for_element_visible(LOCATOR_CONSTRUCTOR_DROP_ZONE)
         # Выполняем JavaScript для эмуляции drag-and-drop
         self._execute_script("""
             function createDragEvent(name) {
@@ -221,7 +175,7 @@ class ConstructorPage(BasePage):
         def order_number_is_valid(driver):
             try:
                 # Находим элемент
-                order_element = driver.find_element(*self.LOCATOR_ORDER_NUMBER)
+                order_element = driver.find_element(*LOCATOR_ORDER_NUMBER)
                 order_number = order_element.text.strip()
                 
                 # Проверяем, что номер состоит ровно из 6 цифр и не равен "9999"
@@ -242,7 +196,7 @@ class ConstructorPage(BasePage):
         # Ждём валидного номера заказа
         wait.until(order_number_is_valid)
         # Возвращаем номер заказа (теперь он точно валидный)
-        order_element = self.find_element(self.LOCATOR_ORDER_NUMBER)
+        order_element = self.find_element(LOCATOR_ORDER_NUMBER)
         return order_element.text.strip()
 
     
@@ -250,23 +204,23 @@ class ConstructorPage(BasePage):
     
     @allure.step("Получение счётчика булки Краторная")
     def get_krator_bun_counter(self):
-        return int(self.get_text(self.LOCATOR_KRATOR_BUN_COUNTER))
+        return int(self.get_text(LOCATOR_KRATOR_BUN_COUNTER))
     
     @allure.step("Получение счётчика соуса Spicy-X")
     def get_spicy_sauce_counter(self):
-        return int(self.get_text(self.LOCATOR_SPICY_SAUCE_COUNTER))
+        return int(self.get_text(LOCATOR_SPICY_SAUCE_COUNTER))
     
     @allure.step("Получение счётчика Говяжьего метеорита")
     def get_beef_meteorite_counter(self):
-        return int(self.get_text(self.LOCATOR_BEEF_METEORITE_COUNTER))
+        return int(self.get_text(LOCATOR_BEEF_METEORITE_COUNTER))
     
     @allure.step("Получение счётчика Хрустящих колец")
     def get_crispy_rings_counter(self):
-        return int(self.get_text(self.LOCATOR_CRISPY_RINGS_COUNTER))
+        return int(self.get_text(LOCATOR_CRISPY_RINGS_COUNTER))
     
     @allure.step("Получение счётчика Плодов Фалленианского дерева")
     def get_fallenian_fruits_counter(self):
-        return int(self.get_text(self.LOCATOR_FALLENIAN_FRUITS_COUNTER))
+        return int(self.get_text(LOCATOR_FALLENIAN_FRUITS_COUNTER))
     
 
     # МЕТОДЫ ДЛЯ DRAG-AND-DROP ПО ЛОКАТОРУ
@@ -274,7 +228,7 @@ class ConstructorPage(BasePage):
     @allure.step("Drag-and-Drop ингредиента по локатору в конструктор")
     def drag_ingredient_to_constructor_by_locator(self, ingredient_locator, timeout=10):
         ingredient = self.wait_for_element_clickable(ingredient_locator, timeout=timeout)
-        drop_zone = self.wait_for_element_visible(self.LOCATOR_CONSTRUCTOR_DROP_ZONE)
+        drop_zone = self.wait_for_element_visible(LOCATOR_CONSTRUCTOR_DROP_ZONE)
         
         # Определяем браузер и выбираем метод
         browser_name = self._get_browser_name()
@@ -309,12 +263,12 @@ class ConstructorPage(BasePage):
     
     @allure.step("Клик по кнопке «Оформить заказ»")
     def click_place_order_button(self):
-        self.click(self.LOCATOR_BUTTON_PLACE_ORDER)
+        self.click(LOCATOR_BUTTON_PLACE_ORDER)
     
     
     @allure.step("Закрытие модального окна заказа")
     def close_order_modal(self):
-        self.click(self.LOCATOR_MODAL_CLOSE_BUTTON)
+        self.click(LOCATOR_MODAL_CLOSE_BUTTON)
 
 
     # МЕТОДЫ ДЛЯ СОЗДАНИЯ ЗАКАЗА 
@@ -323,13 +277,13 @@ class ConstructorPage(BasePage):
     def create_order(self):
 
         # Добавляем булку
-        self.drag_ingredient_to_constructor_by_locator(self.LOCATOR_KRATOR_BUN)
+        self.drag_ingredient_to_constructor_by_locator(LOCATOR_KRATOR_BUN)
         # Добавляем соус
-        self.drag_ingredient_to_constructor_by_locator(self.LOCATOR_SPICY_SAUCE)
+        self.drag_ingredient_to_constructor_by_locator(LOCATOR_SPICY_SAUCE)
         # Переключаемся на начинки
-        self.click(self.LOCATOR_FILLINGS_TAB)
+        self.click(LOCATOR_FILLING_TAB)
         # Добавляем начинку
-        self.drag_ingredient_to_constructor_by_locator(self.LOCATOR_BEEF_METEORITE)
+        self.drag_ingredient_to_constructor_by_locator(LOCATOR_BEEF_METEORITE)
         # Оформляем заказ
         self.click_place_order_button()
         # Получаем номер заказа

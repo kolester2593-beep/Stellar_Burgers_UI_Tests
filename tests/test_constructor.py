@@ -111,3 +111,4 @@ class TestIngredientCounter:
         assert new_counter == initial_counter + 2, (
             f"Счётчик не увеличился. Было: {initial_counter}, стало: {new_counter}"
         )
+        

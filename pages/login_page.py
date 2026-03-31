@@ -7,78 +7,66 @@
 Наследуется от BasePage и получает все его методы.
 """
 
-from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
 
 import allure
 
 
+from locators.base_locators import (
+    LOCATOR_PERSONAL_CABINET_BTN
+)
+
+from locators.main_locators import (
+    LOCATOR_LOGIN_BUTTON,
+    LOCATOR_BUTTON_PLACE_ORDER
+)
+
+from locators.login_locators import (
+    LOCATOR_INPUT_EMAIL,
+    LOCATOR_INPUT_PASSWORD,
+    LOCATOR_BUTTON_LOGIN,
+    LOCATOR_HEADER_LOGIN
+)
+
+
 class LoginPage(BasePage):
 
-    
-    # --- Кнопки навигации (на главной странице) ---
-    
-    # Кнопка «Войти в аккаунт» на главной странице
-    BUTTON_LOGIN_MAIN = (By.XPATH, "//button[text()='Войти в аккаунт']")
-    # Кнопка «Оформить заказ» на главной странице (после авторизации)
-    BUTTON_PLACE_ORDER = (By.XPATH, "//button[text()='Оформить заказ']")
-    
-    # --- Элементы страницы входа (/login) ---
-    
-    # Плейсхолдер поля Email
-    LABEL_EMAIL = (By.XPATH, "//label[text()='Email']")
-    
-    # Плейсхолдер поля Пароль
-    LABEL_PASSWORD = (By.XPATH, "//label[text()='Пароль']")
-    
-    # Поле ввода Email (name='name')
-    INPUT_EMAIL = (By.XPATH, "//input[@name='name']")
-    
-    # Поле ввода Пароля (name='Пароль')
-    INPUT_PASSWORD = (By.XPATH, "//input[@name='Пароль']")
-    
-    # Кнопка «Войти»
-    BUTTON_LOGIN = (By.XPATH, "//button[text()='Войти']")
-    
-    # Заголовок страницы «Вход»
-    HEADER_LOGIN = (By.XPATH, "//h2[text()='Вход']")
-    
 
     # МЕТОДЫ ДЛЯ ПОЛЕЙ ВВОДА
     
     @allure.step("Ввод email: {email}")
     def input_email(self, email):
-        self.input_text(self.INPUT_EMAIL, email)
+        self.input_text(LOCATOR_INPUT_EMAIL, email)
 
     @allure.step("Ввод пароля")
     def input_password(self, password):
-        self.input_text(self.INPUT_PASSWORD, password)
+        self.input_text(LOCATOR_INPUT_PASSWORD, password)
     
 
     # МЕТОДЫ ДЛЯ КНОПОК
 
     @allure.step("Нажатие кнопки «Войти»")
     def click_login_button(self):
-        self.click(self.BUTTON_LOGIN)
+        self.click(LOCATOR_BUTTON_LOGIN)
     
     @allure.step("Нажатие кнопки «Войти в аккаунт» на главной")
     def click_login_button_main(self):
-        self.click(self.BUTTON_LOGIN_MAIN)
+        self.click(LOCATOR_PERSONAL_CABINET_BTN)
 
 
     # МЕТОДЫ ПРОВЕРКИ
     
     @allure.step("Проверка загрузки страницы входа")
     def is_login_page_loaded(self):
-        return self.is_element_visible(self.HEADER_LOGIN)
+        return self.is_element_visible(LOCATOR_HEADER_LOGIN)
     
     @allure.step("Проверка видимости кнопки «Оформить заказ»")
     def is_place_order_button_visible(self):
-        return self.is_element_visible(self.BUTTON_PLACE_ORDER)
+        return self.is_element_visible(LOCATOR_BUTTON_PLACE_ORDER)
     
     @allure.step("Проверка видимости кнопки «Войти в аккаунт»")
     def is_login_button_main_visible(self):
-        return self.is_element_visible(self.BUTTON_LOGIN_MAIN)
+        return self.is_element_visible(LOCATOR_LOGIN_BUTTON)
     
 
     # КОМПЛЕКСНЫЕ МЕТОДЫ

@@ -9,6 +9,21 @@ from pages.constructor_page import ConstructorPage
 from pages.orders_feed_page import OrdersFeedPage
 from selenium.webdriver.support.wait import WebDriverWait
 
+from locators.main_locators import (
+    LOCATOR_FILLING_TAB,
+    LOCATOR_BUTTON_PLACE_ORDER
+)
+
+from locators.constructor_locators import (
+    LOCATOR_KRATOR_BUN,
+    LOCATOR_SPICY_SAUCE,
+    LOCATOR_BEEF_METEORITE,
+    LOCATOR_CRISPY_RINGS,
+    LOCATOR_FALLENIAN_FRUITS
+)
+
+
+
 # ФИКСТУРА ДРАЙВЕРА (ОСНОВНАЯ)
 @pytest.fixture(params=BrowserConfig.BROWSERS, scope='function')
 @allure.feature('Инфраструктура')
@@ -141,7 +156,7 @@ def login_user(main_page, login_page):
         with allure.step("Проверка успешной авторизации"):
             # Ждём появления кнопки «Оформить заказ» (признак авторизации)
             main_page.wait_for_element_clickable(
-                main_page.LOCATOR_ORDER_BUTTON, 
+                LOCATOR_BUTTON_PLACE_ORDER,
                 timeout=10
             )
     
@@ -158,24 +173,24 @@ def create_order(login_user, constructor_page):
         # === Шаг 1: Краторная булка (счётчик станет 2) ===
         with allure.step("Добавление Краторной булки"):
             constructor_page.drag_ingredient_to_constructor_by_locator(
-                constructor_page.LOCATOR_KRATOR_BUN
+                LOCATOR_KRATOR_BUN
             )
         
         # === Шаг 2: Соус Spicy-X (1 раз) ===
         with allure.step("Добавление Соуса Spicy-X"):
             constructor_page.drag_ingredient_to_constructor_by_locator(
-                constructor_page.LOCATOR_SPICY_SAUCE
+                LOCATOR_SPICY_SAUCE
             )
         
         # === Шаг 3: Переключаемся на вкладку "Начинки" ===
         with allure.step("Переключение на вкладку «Начинки»"):
-            constructor_page.click(constructor_page.LOCATOR_FILLINGS_TAB)
+            constructor_page.click(LOCATOR_FILLING_TAB)
         
         # === Шаг 4-6: Добавляем начинки ===
         for name, locator, counter_method in [
-            ("Говяжий метеорит", constructor_page.LOCATOR_BEEF_METEORITE, constructor_page.get_beef_meteorite_counter),
-            ("Хрустящие кольца", constructor_page.LOCATOR_CRISPY_RINGS, constructor_page.get_crispy_rings_counter),
-            ("Плоды Фалленианского дерева", constructor_page.LOCATOR_FALLENIAN_FRUITS, constructor_page.get_fallenian_fruits_counter),
+            ("Говяжий метеорит", LOCATOR_BEEF_METEORITE, constructor_page.get_beef_meteorite_counter),
+            ("Хрустящие кольца", LOCATOR_CRISPY_RINGS, constructor_page.get_crispy_rings_counter),
+            ("Плоды Фалленианского дерева", LOCATOR_FALLENIAN_FRUITS, constructor_page.get_fallenian_fruits_counter),
         ]:
             with allure.step(f"Добавление {name}"):
                 constructor_page.drag_ingredient_to_constructor_by_locator(locator)
