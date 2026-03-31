@@ -13,10 +13,9 @@
 """
 
 from selenium.webdriver.common.by import By
+from pages.base_page import BasePage
 
 import allure
-
-from pages.base_page import BasePage
 
 
 class MainPage(BasePage):
@@ -90,22 +89,18 @@ class MainPage(BasePage):
     @allure.step("Открытие главной страницы")
     def open_main_page(self):
         self.open(self.BASE_URL)
-        return self
     
     @allure.step("Переход на страницу ленты заказов")
     def go_to_orders_feed(self):
         self.click(self.LOCATOR_ORDERS_FEED_TAB)
-        return self
     
     @allure.step("Переход на страницу конструктора")
     def go_to_constructor(self):
         self.click(self.LOCATOR_CONSTRUCTOR_TAB)    
-        return self
     
     @allure.step("Открытие модального окна авторизации")
     def open_login_modal(self):
         self.click(self.LOCATOR_PERSONAL_CABINET_BTN) 
-        return self
     
     @allure.step("Проверка текущего таба: {tab_name}")
     def is_current_tab(self, tab_name):
@@ -122,17 +117,14 @@ class MainPage(BasePage):
     @allure.step("Переключение на таб «Булки»")
     def switch_to_buns_tab(self):
         self.click(self.LOCATOR_BUNS_TAB)    
-        return self
     
     @allure.step("Переключение на таб «Соусы»")
     def switch_to_sauce_tab(self):
         self.click(self.LOCATOR_SAUCE_TAB)
-        return self
     
     @allure.step("Переключение на таб «Начинки»")
     def switch_to_filling_tab(self):
         self.click(self.LOCATOR_FILLING_TAB)
-        return self
     
     @allure.step("Проверка активного таба ингредиентов")
     def get_active_tab(self):
@@ -178,10 +170,9 @@ class MainPage(BasePage):
     @allure.step("Открытие модального окна ингредиента: индекс {index}")
     def open_ingredient_modal(self, index=0):
         ingredient = self.get_ingredient_by_index(index)
-        self.driver.execute_script("arguments[0].click();", ingredient)
+        self._execute_script("arguments[0].click();", ingredient)
         # Ждём появления модального окна
         self.wait_for_element_visible(self.LOCATOR_MODAL_CONTAINER)
-        return self
     
     @allure.step("Открытие модального окна ингредиента по названию: {name}")
     def open_ingredient_modal_by_name(self, name):
@@ -190,7 +181,6 @@ class MainPage(BasePage):
             raise ValueError(f"Ингредиент '{name}' не найден")
         ingredient.click()
         self.wait_for_element_visible(self.LOCATOR_MODAL_CONTAINER)
-        return self
     
     @allure.step("Проверка открытого модального окна")
     def is_modal_open(self):
@@ -205,7 +195,6 @@ class MainPage(BasePage):
         self.click(self.LOCATOR_MODAL_CLOSE_BTN) 
         # Ждём исчезновения модального окна
         self.wait_for_element_disappear(self.LOCATOR_MODAL_CONTAINER)
-        return self
     
 
     # МЕТОДЫ ПРОВЕРКИ СОСТОЯНИЯ СТРАНИЦЫ

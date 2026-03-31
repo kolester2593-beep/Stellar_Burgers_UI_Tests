@@ -9,7 +9,6 @@
 """
 
 import allure
-import pytest
 
 
 @allure.feature("Конструктор бургеров")

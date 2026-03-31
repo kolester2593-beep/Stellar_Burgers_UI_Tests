@@ -8,12 +8,15 @@
 - Проверка появления нового заказа после оформления
 """
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-
 import allure
 
 from pages.base_page import BasePage
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import (
+        NoSuchElementException,
+        StaleElementReferenceException,
+        TimeoutException
+)
 
 
 class OrdersFeedPage(BasePage):
@@ -108,12 +111,10 @@ class OrdersFeedPage(BasePage):
     @allure.step("Открытие страницы ленты заказов")
     def open_orders_feed_page(self):
         self.open(f"{self.BASE_URL}feed")
-        return self
     
     @allure.step("Переход на страницу конструктора")
     def go_to_constructor(self):
         self.click(self.LOCATOR_CONSTRUCTOR_TAB)
-        return self
     
     @allure.step("Проверка заголовка страницы ленты заказов")
     def is_page_header_visible(self):
@@ -182,7 +183,7 @@ class OrdersFeedPage(BasePage):
     
     @allure.step("Проверка появления номера заказа в разделе «В работе»")
     def wait_for_order_in_work(self, order_number, timeout=30): 
-        wait = WebDriverWait(self.driver, timeout, poll_frequency=0.5)
+        wait = self._get_wait(timeout, poll_frequency=1)
         
         def order_appeared(driver):
             try:
@@ -195,16 +196,17 @@ class OrdersFeedPage(BasePage):
                 found = target_number in found_numbers
 
                 return found
-            except Exception as e:
-                print(f"⏳ Ошибка при проверке: {e}")
-                return False 
+            except (NoSuchElementException, StaleElementReferenceException):
+                return False
+            except TimeoutException:
+                return False
         
         return wait.until(order_appeared)
 
 
     @allure.step("Проверка увеличения счётчика «Выполнено за все время»")
     def wait_for_all_time_counter_increase(self, old_value, timeout=10):
-        wait = WebDriverWait(self.driver, timeout)
+        wait = self._get_wait(timeout)
         
         def counter_changed(driver):
             current_value = self.get_completed_all_time_count()
@@ -214,7 +216,7 @@ class OrdersFeedPage(BasePage):
     
     @allure.step("Проверка увеличения счётчика «Выполнено за сегодня»")
     def wait_for_today_counter_increase(self, old_value, timeout=10):
-        wait = WebDriverWait(self.driver, timeout)
+        wait = self._get_wait(timeout)
         
         def counter_changed(driver):
             current_value = self.get_completed_today_count()
@@ -255,7 +257,7 @@ class OrdersFeedPage(BasePage):
     
     @allure.step("Проверка обновления всех счётчиков после заказа")
     def verify_counters_updated(self, before_values):
-        wait = WebDriverWait(self.driver, 10)
+        wait = self._get_wait(10)
 
         # Ждём увеличения счётчика «За все время»
         def all_time_changed(driver):

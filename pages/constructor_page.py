@@ -9,15 +9,15 @@
 - Работа с модальными окнами ингредиентов
 """
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.webdriver.support import expected_conditions as EC
-import allure
-
 from pages.base_page import BasePage
-from utils.config import Config
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import (
+    StaleElementReferenceException,
+    NoSuchElementException,
+    TimeoutException
+)
+
+import allure
 
 
 class ConstructorPage(BasePage):
@@ -101,7 +101,6 @@ class ConstructorPage(BasePage):
     @allure.step("Переход на страницу конструктора")
     def open_constructor_page(self):
         self.open(self.BASE_URL)
-        return self
     
 
     # МЕТОДЫ РАБОТЫ С ТАБАМИ ИНГРЕДИЕНТОВ
@@ -109,17 +108,16 @@ class ConstructorPage(BasePage):
     @allure.step("Переключение на таб «Булки»")
     def switch_to_buns_tab(self):
         self.click(self.LOCATOR_BUNS_TAB)
-        return self
     
+
     @allure.step("Переключение на таб «Соусы»")
     def switch_to_sauce_tab(self):
         self.click(self.LOCATOR_SAUCE_TAB) 
-        return self
+
     
     @allure.step("Переключение на таб «Начинки»")
     def switch_to_filling_tab(self):
         self.click(self.LOCATOR_FILLING_TAB) 
-        return self
     
 
     # МЕТОДЫ РАБОТЫ С ИНГРЕДИЕНТАМИ
@@ -151,13 +149,12 @@ class ConstructorPage(BasePage):
         # Находим зону конструктора
         constructor_zone = self.wait_for_element_visible(self.LOCATOR_CONSTRUCTOR_BASKET)
         # Создаём ActionChains
-        actions = ActionChains(self.driver)
+        actions = self._create_action_chains()
         # Выполняем перетаскивание
         actions.click_and_hold(ingredient)
         actions.move_to_element(constructor_zone)
         actions.release()
         actions.perform()
-        return self
     
 
     @allure.step("Drag-and-Drop ингредиента через JavaScript: индекс {index}")
@@ -166,7 +163,7 @@ class ConstructorPage(BasePage):
         ingredient = self.get_ingredient_by_index(index)
         constructor_zone = self.wait_for_element_visible(self.LOCATOR_CONSTRUCTOR_BASKET)
         # Выполняем JavaScript для эмуляции drag-and-drop
-        self.driver.execute_script("""
+        self._execute_script("""
             function createDragEvent(name) {
                 const event = new Event(name, { bubbles: true });
                 event.dataTransfer = { 
@@ -184,15 +181,13 @@ class ConstructorPage(BasePage):
             arguments[0].dispatchEvent(new Event('dragend', { bubbles: true }));
         """, ingredient, constructor_zone)
         
-        return self
     
-
     # МЕТОДЫ ПРОВЕРКИ СЧЁТЧИКОВ
     
     @allure.step("Проверка увеличения счётчика ингредиента: индекс {index}")
     def wait_for_counter_increase(self, index=0, old_value="0", timeout=10):
-        # Используем переданный timeout вместо Config.EXPLICIT_WAIT_TIMEOUT
-        wait = WebDriverWait(self.driver, timeout)
+        # Используем переданный timeout вместо TimeoutConfig.EXPLICIT_WAIT_TIMEOUT
+        wait = self._get_wait(timeout)
     
         def counter_changed(driver):
             current_value = self.get_ingredient_counter(index)
@@ -205,10 +200,9 @@ class ConstructorPage(BasePage):
         counter_text = self.get_ingredient_counter(index)
         return int(counter_text)
 
-
     @allure.step("Ожидание значения счётчика по названию: {ingredient_name} = {expected_value}")
     def wait_for_counter_value_by_name(self, ingredient_name, expected_value, timeout=10):
-        wait = WebDriverWait(self.driver, timeout)
+        wait = self._get_wait(timeout)
         
         def counter_equals(driver):
             current = self.get_counter_by_name(ingredient_name)
@@ -221,7 +215,7 @@ class ConstructorPage(BasePage):
 
     @allure.step("Получение номера заказа из модального окна")
     def get_order_number_from_modal(self, timeout=60):
-        wait = WebDriverWait(self.driver, timeout, poll_frequency=1)
+        wait = self._get_wait(timeout, poll_frequency=1)
         
         # Условие с обработкой исключений
         def order_number_is_valid(driver):
@@ -238,7 +232,11 @@ class ConstructorPage(BasePage):
                     
             except StaleElementReferenceException:
                 return False
-            except Exception as e:
+            except NoSuchElementException:
+                # Элемент ещё не появился в DOM
+                return False
+            except TimeoutException:
+                # Превышено время ожидания
                 return False
         
         # Ждём валидного номера заказа
@@ -279,11 +277,11 @@ class ConstructorPage(BasePage):
         drop_zone = self.wait_for_element_visible(self.LOCATOR_CONSTRUCTOR_DROP_ZONE)
         
         # Определяем браузер и выбираем метод
-        browser_name = self.driver.capabilities.get('browserName', '').lower()
+        browser_name = self._get_browser_name()
         
         if browser_name == 'firefox':
             # Для Firefox используем JavaScript
-            self.driver.execute_script("""
+            self._execute_script("""
                 function createDragEvent(name) {
                     const event = new Event(name, { bubbles: true });
                     event.dataTransfer = { 
@@ -300,27 +298,23 @@ class ConstructorPage(BasePage):
             """, ingredient, drop_zone)
         else:
             
-            actions = ActionChains(self.driver)
+            actions = self._create_action_chains()
             actions.click_and_hold(ingredient)
             actions.move_to_element(drop_zone)
             actions.release()
             actions.perform()
         
-        return self
-    
 
     # МЕТОДЫ ДЛЯ ОФОРМЛЕНИЯ ЗАКАЗА
     
     @allure.step("Клик по кнопке «Оформить заказ»")
     def click_place_order_button(self):
         self.click(self.LOCATOR_BUTTON_PLACE_ORDER)
-        return self
     
     
     @allure.step("Закрытие модального окна заказа")
     def close_order_modal(self):
         self.click(self.LOCATOR_MODAL_CLOSE_BUTTON)
-        return self
 
 
     # МЕТОДЫ ДЛЯ СОЗДАНИЯ ЗАКАЗА 

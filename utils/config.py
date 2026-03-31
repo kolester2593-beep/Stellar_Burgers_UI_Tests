@@ -1,14 +1,15 @@
-# Глобальные настройки проекта.
-# Храним URL, таймауты и настройки браузеров в одном месте.
-# Тестовые данные дял авторизации
-class Config:
+# Глобальные настройки проекта, разделённые по ответственности
 
+
+# Настройки приложения (URL, базовые параметры)
+class AppConfig:
 
     # URL приложения
     BASE_URL = "https://stellarburgers.education-services.ru/"
 
 
-    # ---Таймауты в секундах---
+# КЛАСС 2: Настройки таймаутов и ожиданий
+class TimeoutConfig:
 
     # Время ожидания загрузки страницы
     PAGE_LOAD_TIMEOUT = 15
@@ -18,16 +19,16 @@ class Config:
     IMPLICIT_WAIT_TIMEOUT = 10
 
 
-    # ---Настройки браузеров
+# Настройки браузеров
+class BrowserConfig:
 
     BROWSERS = ['chrome', 'firefox']
     DEFAULT_BROWSERS = 'chrome'
 
 
-    # --- Тестовые данные дял авторизации ---
+# Тестовые данные
+class TestData:
 
     USER_EMAIL = "testovii@test.ru"
     USER_PASSWORD = "pass123word"
     USER_NAME = "Тестировщик"
-
-    

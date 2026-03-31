@@ -8,8 +8,9 @@
 """
 
 from selenium.webdriver.common.by import By
-import allure
 from pages.base_page import BasePage
+
+import allure
 
 
 class LoginPage(BasePage):
@@ -48,12 +49,10 @@ class LoginPage(BasePage):
     @allure.step("Ввод email: {email}")
     def input_email(self, email):
         self.input_text(self.INPUT_EMAIL, email)
-        return self
-    
+
     @allure.step("Ввод пароля")
     def input_password(self, password):
         self.input_text(self.INPUT_PASSWORD, password)
-        return self
     
 
     # МЕТОДЫ ДЛЯ КНОПОК
@@ -61,12 +60,10 @@ class LoginPage(BasePage):
     @allure.step("Нажатие кнопки «Войти»")
     def click_login_button(self):
         self.click(self.BUTTON_LOGIN)
-        return self
     
     @allure.step("Нажатие кнопки «Войти в аккаунт» на главной")
     def click_login_button_main(self):
         self.click(self.BUTTON_LOGIN_MAIN)
-        return self
 
 
     # МЕТОДЫ ПРОВЕРКИ
@@ -92,4 +89,4 @@ class LoginPage(BasePage):
         self.input_email(email)
         self.input_password(password)
         self.click_login_button()
-        return self
+        

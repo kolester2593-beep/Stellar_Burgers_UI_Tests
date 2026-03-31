@@ -7,8 +7,7 @@
 Все тесты ТРЕБУЮТ авторизации (используют фикстуру login_user).
 """
 
-import allure  
-import pytest  
+import allure   
 
 
 @allure.feature("Лента заказов")

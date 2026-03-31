@@ -19,9 +19,8 @@ from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
-from utils.config import Config
-
-def get_driver(browser_name: str=Config.DEFAULT_BROWSERS):
+from utils.config import TimeoutConfig, BrowserConfig
+def get_driver(browser_name: str=BrowserConfig.DEFAULT_BROWSERS):
     browser_name = browser_name.lower()
 
     if browser_name == "chrome":
@@ -61,13 +60,13 @@ def get_driver(browser_name: str=Config.DEFAULT_BROWSERS):
     else:
         raise ValueError(
             f"Браузер '{browser_name}' не поддерживается."
-            f"Доступные: {Config.BROWSERS}"
+            f"Доступные: {BrowserConfig.BROWSERS}"
         )
     
     # Максимальное время загрузки страницы
-    driver.set_page_load_timeout(Config.PAGE_LOAD_TIMEOUT)
+    driver.set_page_load_timeout(TimeoutConfig.PAGE_LOAD_TIMEOUT)
     # Неявное ожидание
-    driver.implicitly_wait(Config.IMPLICIT_WAIT_TIMEOUT)
+    driver.implicitly_wait(TimeoutConfig.IMPLICIT_WAIT_TIMEOUT)
     # Разворачиваем окно на весь экран
     driver.maximize_window()
 

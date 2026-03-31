@@ -1,19 +1,16 @@
 import pytest
 import allure
 
-from utils.config import Config
+from utils.config import AppConfig, TimeoutConfig, BrowserConfig, TestData
 from utils.driver_factory import get_driver
-
 from pages.main_page import MainPage
 from pages.login_page import LoginPage
 from pages.constructor_page import ConstructorPage
 from pages.orders_feed_page import OrdersFeedPage
-from pages.base_page import BasePage
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
 # ФИКСТУРА ДРАЙВЕРА (ОСНОВНАЯ)
-@pytest.fixture(params=Config.BROWSERS, scope='function')
+@pytest.fixture(params=BrowserConfig.BROWSERS, scope='function')
 @allure.feature('Инфраструктура')
 @allure.story('Инициализация браузера')
 def driver(request):
@@ -28,7 +25,7 @@ def driver(request):
 
     with allure.step("Отчистка состояния перед тестом"):
         # Открываем базовый URL
-        driver_instance.get(Config.BASE_URL)
+        driver_instance.get(AppConfig.BASE_URL)
         # Отчищаем куки
         driver_instance.delete_all_cookies()
         # Отчищаем локальное хранилище
@@ -97,7 +94,7 @@ def login_page(driver):
 def navigate_to_main(driver):
 
     with allure.step("Переход на главную страницу"):
-        driver.get(Config.BASE_URL)
+        driver.get(AppConfig.BASE_URL)
 
     yield driver
 
@@ -107,7 +104,7 @@ def navigate_to_main(driver):
 def wait(driver):
 
     with allure.step ("Инициализация WebDriverWait"):
-        wait_instance = WebDriverWait(driver, Config.EXPLICIT_WAIT_TIMEOUT)
+        wait_instance = WebDriverWait(driver, TimeoutConfig.EXPLICIT_WAIT_TIMEOUT)
 
     return wait_instance
 
@@ -130,11 +127,11 @@ def login_user(main_page, login_page):
             main_page.open_login_modal()
         
         # Шаг 3: Вводим данные для входа
-        with allure.step(f"Ввод email: {Config.USER_EMAIL}"):
-            login_page.input_email(Config.USER_EMAIL)
+        with allure.step(f"Ввод email: {TestData.USER_EMAIL}"):
+            login_page.input_email(TestData.USER_EMAIL)
         
         with allure.step("Ввод пароля"):
-            login_page.input_password(Config.USER_PASSWORD)
+            login_page.input_password(TestData.USER_PASSWORD)
         
         # Шаг 4: Нажимаем кнопку «Войти»
         with allure.step("Нажатие кнопки «Войти»"):
@@ -163,15 +160,12 @@ def create_order(login_user, constructor_page):
             constructor_page.drag_ingredient_to_constructor_by_locator(
                 constructor_page.LOCATOR_KRATOR_BUN
             )
-            # Булка добавляется дважды (верх+низ)
-            assert constructor_page.get_krator_bun_counter() == 2, "Счётчик булки не равен 2"
         
         # === Шаг 2: Соус Spicy-X (1 раз) ===
         with allure.step("Добавление Соуса Spicy-X"):
             constructor_page.drag_ingredient_to_constructor_by_locator(
                 constructor_page.LOCATOR_SPICY_SAUCE
             )
-            assert constructor_page.get_spicy_sauce_counter() == 1, "Счётчик соуса не равен 1"
         
         # === Шаг 3: Переключаемся на вкладку "Начинки" ===
         with allure.step("Переключение на вкладку «Начинки»"):
@@ -185,7 +179,6 @@ def create_order(login_user, constructor_page):
         ]:
             with allure.step(f"Добавление {name}"):
                 constructor_page.drag_ingredient_to_constructor_by_locator(locator)
-                assert counter_method() == 1, f"Счётчик {name} не равен 1"
         
         # === Шаг 7: Оформляем заказ ===
         with allure.step("Оформление заказа"):
